@@ -6,7 +6,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash $HOME/.claude/hooks/session-start.sh"
+            "command": "bash $HOME/.claude/hooks/session-start.sh",
+            "timeout": 10
           }
         ]
       }
@@ -17,7 +18,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash $HOME/.claude/hooks/session-end.sh"
+            "command": "bash $HOME/.claude/hooks/session-end.sh",
+            "timeout": 10
           }
         ]
       }
@@ -29,12 +31,12 @@
           {
             "type": "command",
             "command": "bash $HOME/.claude/hooks/capture-lessons.sh",
-            "timeout": 5000
+            "timeout": 5
           },
           {
             "type": "command",
             "command": "bash $HOME/.claude/hooks/detect-iteration.sh",
-            "timeout": 5000
+            "timeout": 5
           }
         ]
       }
