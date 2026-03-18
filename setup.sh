@@ -74,6 +74,13 @@ fi
 
 mkdir -p "$VAULT_DIR"/{self,ops,notes/mocs}
 
+# Copy first-conversation prompt (used when vault is empty)
+FIRST_CONVO_TARGET="$VAULT_DIR/../first-conversation.md"
+if [ ! -f "$FIRST_CONVO_TARGET" ] && [ -f "$TEMPLATES/first-conversation.md" ]; then
+  cp "$TEMPLATES/first-conversation.md" "$FIRST_CONVO_TARGET"
+  echo "  Created: first-conversation.md (the seed)"
+fi
+
 # Copy templates, don't overwrite existing
 for template in $(find "$TEMPLATES/vault" -type f); do
   relative="${template#$TEMPLATES/vault/}"
@@ -374,24 +381,18 @@ fi
 
 # --- Done ---
 echo ""
-echo "=== Setup Complete ==="
+echo "=== The seed is planted ==="
 echo ""
-echo "What happens now:"
-echo "  1. Open Claude Code in any directory"
-echo "  2. The session-start hook will inject your vault context"
-echo "  3. Start working — corrections and failures are auto-captured"
-echo "  4. After a week, Claude will feel like it knows you"
+echo "Open Claude Code and start talking."
 echo ""
-echo "Next steps:"
-echo "  - Edit $VAULT_DIR/self/identity.md — tell Claude who you are"
-echo "  - Edit $VAULT_DIR/self/principal.md — describe yourself and your preferences"
-echo "  - Edit $GLOBAL_CLAUDE — add your principles and hard rules"
-echo "  - Start the observatory: bun ~/.operatoros/observatory/server.ts"
-echo "  - Configure collectors: edit ~/.operatoros/observatory/collectors/"
-echo "  - Read templates/claude-md/layering-guide.md — understand the architecture"
+echo "Your AI doesn't know you yet — that's the point. It will ask who you are,"
+echo "listen to your answers, and remember everything for next time."
 echo ""
-echo "Optional: keep vault in sync with Paperclip (if you use it):"
-echo "  crontab -e  # add this line:"
-echo "  0 */2 * * * bash ~/.claude/hooks/sync-vault-state.sh"
+echo "After a week, it knows you. After a month, it's a genuine partner."
+echo "Every conversation makes it better."
 echo ""
-echo "The more you tell Claude, the better it gets. Every correction compounds."
+echo "Advanced:"
+echo "  - Observatory: bun ~/.operatoros/observatory/server.ts"
+echo "  - Vault: $VAULT_DIR"
+echo "  - Hooks: $HOOKS_DIR"
+echo "  - Architecture: templates/claude-md/layering-guide.md"
