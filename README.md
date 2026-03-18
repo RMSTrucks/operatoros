@@ -19,11 +19,37 @@ After installing OperatorOS, your AI:
 
 You don't configure any of this. You just talk. The system handles the rest.
 
-## The Problem We're Solving
+## Requirements
 
-AI amnesia costs you hours every week. You re-explain context. You re-correct errors. You re-establish preferences. The AI is always a stranger.
+- **[Bun](https://bun.sh)** >= 1.0.0 (runtime for CLI and hooks)
+- **[Claude Code](https://claude.ai/claude-code)** (the AI that OperatorOS makes persistent)
+- A terminal on macOS or Linux
 
-This isn't a feature gap. It's the fundamental missing piece of AI assistants: **persistence**. The ability to accumulate knowledge about you and your work across sessions, across days, across months.
+## Quick Start
+
+```bash
+git clone https://github.com/RMSTrucks/operatoros.git
+cd operatoros
+bash setup.sh
+```
+
+For interactive setup that walks you through identity configuration:
+
+```bash
+bash setup.sh --guided
+```
+
+Then open Claude Code in your project directory and start talking. The AI will recognize it's a fresh install and begin learning who you are from the conversation itself.
+
+## What Happens After Install
+
+1. **setup.sh** creates a memory vault (`.claude/` directory with markdown files), installs lifecycle hooks into Claude Code's settings, and sets up CLAUDE.md identity templates.
+
+2. **First session** — the session-start hook fires, loads vault context, and the AI introduces itself. It asks about you: your name, your role, what you're working on. Your answers become the seed of its memory.
+
+3. **Subsequent sessions** — each session starts by loading everything the AI learned previously. Session handoffs, captured lessons, your identity, your project context. The AI picks up where it left off.
+
+4. **Over time** — mistakes get captured automatically. Patterns emerge. The AI stops making the same errors and starts anticipating your needs. Knowledge compounds.
 
 ## How It Works
 
@@ -37,31 +63,23 @@ OperatorOS creates a persistent memory layer for your AI. Three things make this
 
 The technical details are invisible. You just notice your AI getting smarter about your work.
 
-## Quick Start
+## CLI Commands
 
-**Option 1: Install from npm** (requires [Bun](https://bun.sh))
-
-```bash
-bunx operatoros init
 ```
-
-**Option 2: Clone and run**
-
-```bash
-git clone https://github.com/RMSTrucks/operatoros.git
-cd operatoros
-bash setup.sh
+operatoros init [--guided]   Set up vault, hooks, and CLAUDE.md templates
+operatoros observatory       Start the observatory server (metric collection)
+operatoros scan              Run a one-shot observatory scan
+operatoros report            Generate a morning report
+operatoros status            Quick system health check
+operatoros corrections       Detect recurring mistake patterns
+operatoros version           Show version
 ```
-
-Then open Claude Code and start talking. The AI will learn who you are from the conversation itself.
 
 ## The Vision
 
 OperatorOS is a kernel. A seed. The smallest starting point that can grow into something deeply personal through nothing more than talking.
 
 A senior engineer uses it to build a coding partner that knows their codebase, their conventions, and their debugging style. A business owner uses it to build an operator that knows their customers, their workflows, and their priorities. A student uses it to build a learning companion that remembers what they've studied and where they struggle.
-
-The technical architecture underneath — vault, hooks, lifecycle events — exists to make this experience reliable. But the person never needs to understand it. Like TCP/IP is invisible to someone making a video call, OperatorOS is invisible to someone talking to their AI.
 
 **The right unit of AI persistence is a directory of files that you own.** Not a cloud service. Not a fine-tuned model. Not a vector database. Files on your machine that can't be taken away from you. Open source isn't our business model. It's our trust model. "Yours" means yours.
 
@@ -75,30 +93,38 @@ The technical architecture underneath — vault, hooks, lifecycle events — exi
 
 ## For Contributors
 
-Under the hood, OperatorOS is markdown templates, shell hooks, and a setup script for Claude Code:
+Under the hood, OperatorOS is markdown templates, shell hooks, and a TypeScript CLI for Claude Code:
 
 ```
 operatoros/
-  setup.sh                              # Interactive setup
+  bin/operatoros.ts                       # CLI entry point
+  lib/                                    # Scorecard, picker, runner, corrections
+  setup.sh                               # Interactive setup
   templates/
-    vault/                              # Memory vault templates
-      MEMORY.md                         # Index template
-      self/                             # Identity (who the AI is, who you are)
-      ops/                              # Live state (handoffs, threads, lessons)
-      notes/mocs/                       # Knowledge organization
-    hooks/                              # Lifecycle hooks
-      session-start.sh                  # Context injection
-      session-end.sh                    # Auto-handoff
-      capture-lessons.sh                # Failure capture
-      detect-iteration.sh              # Stuck detection
+    vault/                               # Memory vault templates
+      MEMORY.md                          # Index template
+      self/                              # Identity (who the AI is, who you are)
+      ops/                               # Live state (handoffs, threads, lessons)
+      notes/mocs/                        # Knowledge organization
+    hooks/                               # Lifecycle hooks
+      session-start.sh                   # Context injection
+      session-end.sh                     # Auto-handoff
+      capture-lessons.sh                 # Failure capture
+      detect-iteration.sh               # Stuck detection
+      precompact-save.sh                # Save context before compression
+      sync-vault-state.sh              # Sync state from external sources
       settings-snippet.json             # Hook configuration
-    claude-md/                          # CLAUDE.md identity templates
+    claude-md/                           # CLAUDE.md identity templates
       global-claude-md.md               # Universal principles
       project-claude-md.md              # Project context
       layering-guide.md                 # How the layers work
+    observatory/                         # Metric collection framework
+    notifications/                       # Multi-channel alerting
+    reports/                             # Morning report generator
+  COMPONENTS.md                          # Component interface contracts
 ```
 
-See `templates/claude-md/layering-guide.md` for how the identity chain works.
+See `COMPONENTS.md` for the interface contracts if you want to build collectors, alert rules, notification channels, or vault templates.
 
 ## Origin
 
