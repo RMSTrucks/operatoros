@@ -31,6 +31,7 @@
     "scanner": "bun templates/observatory/scanner.ts",
     "report": "bun templates/reports/morning-report.ts",
     "setup": "bash setup.sh",
+    "test": "bun test",
     "typecheck": "bun x tsc --noEmit"
   },
   "devDependencies": {
