@@ -96,7 +96,7 @@ echo "[2/4] Installing hooks..."
 HOOKS_DIR="$HOME/.claude/hooks"
 mkdir -p "$HOOKS_DIR"
 
-for hook in session-start.sh session-end.sh capture-lessons.sh detect-iteration.sh precompact-save.sh; do
+for hook in session-start.sh session-end.sh capture-lessons.sh detect-iteration.sh precompact-save.sh sync-vault-state.sh; do
   target="$HOOKS_DIR/$hook"
   if [ ! -f "$target" ]; then
     cp "$TEMPLATES/hooks/$hook" "$target"
@@ -389,5 +389,9 @@ echo "  - Edit $GLOBAL_CLAUDE — add your principles and hard rules"
 echo "  - Start the observatory: bun ~/.operatoros/observatory/server.ts"
 echo "  - Configure collectors: edit ~/.operatoros/observatory/collectors/"
 echo "  - Read templates/claude-md/layering-guide.md — understand the architecture"
+echo ""
+echo "Optional: keep vault in sync with Paperclip (if you use it):"
+echo "  crontab -e  # add this line:"
+echo "  0 */2 * * * bash ~/.claude/hooks/sync-vault-state.sh"
 echo ""
 echo "The more you tell Claude, the better it gets. Every correction compounds."
