@@ -1,0 +1,1 @@
+{"timestamp":"2026-03-18T02:13:34.101Z","proposal_file":"/home/jake-deaton/operatoros/metrics/proposals/2026-03-18-02-11.md","metric":"knowledge-capture","before_value":12,"after_value":12,"before_score":0.6,"after_score":0.6,"improved":false,"kept":false,"branch":"experiment/2026-03-18-02-13","duration_ms":431,"error":"dry_run"}
