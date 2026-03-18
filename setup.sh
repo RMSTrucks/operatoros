@@ -96,7 +96,7 @@ echo "[2/4] Installing hooks..."
 HOOKS_DIR="$HOME/.claude/hooks"
 mkdir -p "$HOOKS_DIR"
 
-for hook in session-start.sh session-end.sh capture-lessons.sh detect-iteration.sh; do
+for hook in session-start.sh session-end.sh capture-lessons.sh detect-iteration.sh precompact-save.sh; do
   target="$HOOKS_DIR/$hook"
   if [ ! -f "$target" ]; then
     cp "$TEMPLATES/hooks/$hook" "$target"
@@ -149,6 +149,7 @@ if [ -f "$SETTINGS" ]; then
     echo "  Or add these hooks manually in Claude Code:"
     echo "    /hooks add SessionStart 'bash ~/.claude/hooks/session-start.sh'"
     echo "    /hooks add SessionEnd 'bash ~/.claude/hooks/session-end.sh'"
+    echo "    /hooks add PreCompact 'bash ~/.claude/hooks/precompact-save.sh'"
     echo "    /hooks add PostToolUse:Bash 'bash ~/.claude/hooks/capture-lessons.sh'"
   fi
 else
