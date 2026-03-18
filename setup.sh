@@ -31,7 +31,8 @@ while [[ $# -gt 0 ]]; do
       echo "  1. Memory vault (self/, ops/, notes/ with templates)"
       echo "  2. Session hooks (session-start, session-end, capture-lessons)"
       echo "  3. CLAUDE.md templates (global + project)"
-      echo "  4. Observatory (metrics collection + alerting framework)"
+      echo "  4. Notifications (multi-channel alerting)"
+      echo "  5. Observatory (metrics collection + alerting framework)"
       exit 0
       ;;
     *) echo "Unknown option: $1"; exit 1 ;;
@@ -153,9 +154,42 @@ else
   echo "  Created: settings.json with hooks configured"
 fi
 
+# --- Notifications ---
+echo ""
+echo "[5/6] Setting up Notifications..."
+
+NOTIF_DIR="$HOME/.operatoros/notifications"
+if [ ! -d "$NOTIF_DIR" ]; then
+  mkdir -p "$NOTIF_DIR/channels"
+
+  for file in types.ts notify.ts config.example.ts; do
+    if [ -f "$TEMPLATES/notifications/$file" ]; then
+      cp "$TEMPLATES/notifications/$file" "$NOTIF_DIR/$file"
+      echo "  Created: notifications/$file"
+    fi
+  done
+
+  for channel in "$TEMPLATES/notifications/channels/"*.ts; do
+    if [ -f "$channel" ]; then
+      name=$(basename "$channel")
+      cp "$channel" "$NOTIF_DIR/channels/$name"
+      echo "  Created: notifications/channels/$name"
+    fi
+  done
+
+  if [ -f "$TEMPLATES/notifications/README.md" ]; then
+    cp "$TEMPLATES/notifications/README.md" "$NOTIF_DIR/README.md"
+  fi
+
+  echo "  Notifications installed at: $NOTIF_DIR"
+  echo "  Copy config.example.ts to config.ts and customize."
+else
+  echo "  Notifications already exist at $NOTIF_DIR (skipped)"
+fi
+
 # --- Observatory ---
 echo ""
-echo "[5/5] Setting up Observatory..."
+echo "[6/6] Setting up Observatory..."
 
 OBS_DIR="$HOME/.operatoros/observatory"
 if [ ! -d "$OBS_DIR" ]; then
