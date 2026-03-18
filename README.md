@@ -39,6 +39,14 @@ The technical details are invisible. You just notice your AI getting smarter abo
 
 ## Quick Start
 
+**Option 1: Install from npm** (requires [Bun](https://bun.sh))
+
+```bash
+bunx operatoros init
+```
+
+**Option 2: Clone and run**
+
 ```bash
 git clone https://github.com/RMSTrucks/operatoros.git
 cd operatoros

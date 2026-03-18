@@ -1,13 +1,28 @@
 {
   "name": "operatoros",
-  "version": "0.3.0",
-  "description": "Your AI partner, compounding. Turn Claude Code into a persistent AI operator.",
+  "version": "0.4.0",
+  "description": "Plant a seed. Talk to it. Grow an AI that's yours. Persistent memory for Claude Code.",
   "type": "module",
   "license": "MIT",
+  "author": "Jake Deaton <jake@rmstruckers.com>",
+  "homepage": "https://github.com/RMSTrucks/operatoros#readme",
   "repository": {
     "type": "git",
     "url": "https://github.com/RMSTrucks/operatoros.git"
   },
+  "bugs": {
+    "url": "https://github.com/RMSTrucks/operatoros/issues"
+  },
+  "keywords": [
+    "ai",
+    "claude",
+    "claude-code",
+    "operator",
+    "memory",
+    "persistence",
+    "personal-ai",
+    "agent"
+  ],
   "bin": {
     "operatoros": "./bin/operatoros.ts"
   },
@@ -28,6 +43,7 @@
   "files": [
     "bin/",
     "templates/",
+    "examples/",
     "setup.sh",
     "README.md",
     "LICENSE"

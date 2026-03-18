@@ -17,7 +17,7 @@ import { resolve, dirname } from "node:path";
 import { $ } from "bun";
 
 const ROOT = resolve(dirname(new URL(import.meta.url).pathname), "..");
-const VERSION = "0.3.0";
+const VERSION = "0.4.0";
 
 const command = process.argv[2];
 const args = process.argv.slice(3);
