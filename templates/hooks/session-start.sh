@@ -44,11 +44,20 @@ if [ ! -d "$VAULT_DIR" ] 2>/dev/null; then
 fi
 
 # --- Check if this is a new user (empty vault) ---
+# A vault is "cold" if identity.md is missing, empty, or still contains
+# template placeholders like [YOUR_NAME] or [describe your...].
 IDENTITY="$VAULT_DIR/self/identity.md"
 IDENTITY_CONTENT=""
 if [ -f "$IDENTITY" ]; then
-  # Strip frontmatter and check if there's real content beyond the template
-  IDENTITY_CONTENT=$(sed -n '/^---$/,/^---$/!p' "$IDENTITY" | grep -v '^#' | grep -v '^\s*$' | grep -v '^\[' | grep -v '^<!--' | head -5)
+  # Strip frontmatter, headings, blanks, comments, and any line
+  # containing [PLACEHOLDER] template brackets (unfilled templates).
+  IDENTITY_CONTENT=$(sed -n '/^---$/,/^---$/!p' "$IDENTITY" \
+    | grep -v '^#' \
+    | grep -v '^\s*$' \
+    | grep -v '^\[' \
+    | grep -v '^<!--' \
+    | grep -v '\[.*\]' \
+    | head -5)
 fi
 
 if [ -z "$IDENTITY_CONTENT" ]; then
@@ -61,36 +70,17 @@ if [ -z "$IDENTITY_CONTENT" ]; then
     cat << 'SEED'
 [FIRST CONVERSATION]
 
-This is your first session with OperatorOS. The memory vault is empty — no identity, no preferences, no history. Everything starts here.
+This is a fresh OperatorOS install. The memory vault is empty. Everything starts now.
 
-Your job right now is NOT to code, NOT to configure, NOT to set anything up. Your job is to LISTEN.
+You have one job this session: meet the person in front of you.
 
-Start a conversation with the person in front of you. Learn who they are. Here's how:
+Don't configure anything. Don't write code. Just talk. Open naturally — introduce yourself as their AI partner, say you don't know anything about them yet but you will, and ask what they do, what they're working on, and what they wish AI was actually good at. Then listen.
 
-1. Introduce yourself briefly — you're their AI partner, and you get better over time by learning about them.
+As they talk, pick up on who they are — their name, role, technical level, communication style, what they're working on, what frustrates them. Don't turn it into a checklist.
 
-2. Ask them to tell you about themselves:
-   - What do they do? (role, work, interests)
-   - What are they working on right now?
-   - What frustrates them about AI assistants?
-   - How do they prefer to communicate? (concise vs detailed, formal vs casual)
+When you have a feel for them, save what you learned to the vault (self/principal.md, self/identity.md, self/methodology.md, ops/active-threads.md). Read it back. Let them correct you. Tell them you'll remember next time.
 
-3. As they talk, listen for:
-   - Their name and role
-   - Their technical level (developer, business owner, student, etc.)
-   - Their working style and preferences
-   - Current projects or goals
-   - Pain points you can help with
-
-4. After the conversation, save what you learned:
-   - Write their identity to self/identity.md
-   - Write your understanding of them to self/principal.md
-   - Note their preferences in self/methodology.md
-   - If they mentioned projects, start ops/active-threads.md
-
-5. Tell them what you saved and that you'll remember it next time.
-
-Be warm. Be genuine. This is the first impression — it determines whether they keep talking to you or close the tab. Don't be a form. Don't be a questionnaire. Be someone who genuinely wants to understand them so you can help.
+Be a colleague on day one, not a butler. Be warm but honest. This first conversation is the seed — everything grows from here.
 
 [END FIRST CONVERSATION]
 SEED
