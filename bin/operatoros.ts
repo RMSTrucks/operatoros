@@ -18,7 +18,7 @@ import { resolve, dirname } from "node:path";
 import { $ } from "bun";
 
 const ROOT = resolve(dirname(new URL(import.meta.url).pathname), "..");
-const VERSION = "0.4.0";
+const VERSION = "0.5.0";
 
 const command = process.argv[2];
 const args = process.argv.slice(3);
@@ -44,14 +44,10 @@ async function init(): Promise<void> {
     process.exit(1);
   }
 
-  const guided = args.includes("--guided");
-  const cmd = guided ? `bash "${setupScript}" --guided` : `bash "${setupScript}"`;
-
-  const proc = Bun.spawn(["bash", "-c", cmd], {
+  const proc = Bun.spawn(["bash", setupScript, ...args], {
     stdin: "inherit",
     stdout: "inherit",
     stderr: "inherit",
-    cwd: ROOT,
   });
   const exitCode = await proc.exited;
   process.exit(exitCode);

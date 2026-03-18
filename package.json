@@ -1,6 +1,6 @@
 {
   "name": "operatoros",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Plant a seed. Talk to it. Grow an AI that's yours. Persistent memory for Claude Code.",
   "type": "module",
   "license": "MIT",
