@@ -31,6 +31,7 @@ while [[ $# -gt 0 ]]; do
       echo "  1. Memory vault (self/, ops/, notes/ with templates)"
       echo "  2. Session hooks (session-start, session-end, capture-lessons)"
       echo "  3. CLAUDE.md templates (global + project)"
+      echo "  4. Observatory (metrics collection + alerting framework)"
       exit 0
       ;;
     *) echo "Unknown option: $1"; exit 1 ;;
@@ -152,6 +153,47 @@ else
   echo "  Created: settings.json with hooks configured"
 fi
 
+# --- Observatory ---
+echo ""
+echo "[5/5] Setting up Observatory..."
+
+OBS_DIR="$HOME/.operatoros/observatory"
+if [ ! -d "$OBS_DIR" ]; then
+  mkdir -p "$OBS_DIR"/{collectors,data,lib}
+
+  # Copy observatory framework files
+  for file in types.ts common.ts server.ts scanner.ts alert-rules.ts expectations.ts; do
+    if [ -f "$TEMPLATES/observatory/$file" ]; then
+      cp "$TEMPLATES/observatory/$file" "$OBS_DIR/$file"
+      echo "  Created: observatory/$file"
+    fi
+  done
+
+  # Copy example collectors
+  for collector in "$TEMPLATES/observatory/collectors/"*.ts; do
+    if [ -f "$collector" ]; then
+      name=$(basename "$collector")
+      cp "$collector" "$OBS_DIR/collectors/$name"
+      echo "  Created: observatory/collectors/$name"
+    fi
+  done
+
+  # Copy README
+  if [ -f "$TEMPLATES/observatory/README.md" ]; then
+    cp "$TEMPLATES/observatory/README.md" "$OBS_DIR/README.md"
+  fi
+
+  echo "  Observatory installed at: $OBS_DIR"
+  echo ""
+  echo "  To start the observatory server:"
+  echo "    bun $OBS_DIR/server.ts"
+  echo ""
+  echo "  To run a scan:"
+  echo "    bun $OBS_DIR/scanner.ts"
+else
+  echo "  Observatory already exists at $OBS_DIR (skipped)"
+fi
+
 # --- Done ---
 echo ""
 echo "=== Setup Complete ==="
@@ -166,6 +208,8 @@ echo "Next steps:"
 echo "  - Edit $VAULT_DIR/self/identity.md — tell Claude who you are"
 echo "  - Edit $VAULT_DIR/self/principal.md — describe yourself and your preferences"
 echo "  - Edit $GLOBAL_CLAUDE — add your principles and hard rules"
+echo "  - Start the observatory: bun ~/.operatoros/observatory/server.ts"
+echo "  - Configure collectors: edit ~/.operatoros/observatory/collectors/"
 echo "  - Read templates/claude-md/layering-guide.md — understand the architecture"
 echo ""
 echo "The more you tell Claude, the better it gets. Every correction compounds."
