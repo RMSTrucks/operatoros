@@ -1,0 +1,9 @@
+[Unit]
+Description=OperatorOS Morning Report
+
+[Service]
+Type=oneshot
+# Update these paths to match your installation
+WorkingDirectory=%h/.operatoros
+ExecStart=/usr/local/bin/bun reports/morning-report.ts --notify
+Environment=HOME=%h

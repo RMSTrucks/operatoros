@@ -1,0 +1,10 @@
+[Unit]
+Description=OperatorOS Morning Report
+
+[Timer]
+# Run every morning at 7:00 AM local time
+OnCalendar=*-*-* 07:00:00
+Persistent=true
+
+[Install]
+WantedBy=timers.target
