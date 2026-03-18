@@ -9,6 +9,7 @@
  *   operatoros scan              — Run a one-shot observatory scan
  *   operatoros report            — Generate a morning report
  *   operatoros status            — Quick system health check
+ *   operatoros corrections       — Detect recurring mistake patterns
  *   operatoros version           — Show version
  */
 
@@ -31,6 +32,7 @@ Usage:
   operatoros scan              Run a one-shot observatory scan
   operatoros report            Generate a morning report
   operatoros status            Quick system health check
+  operatoros corrections [dir] Detect recurring mistake patterns
   operatoros version           Show version
   operatoros help              Show this help`);
 }
@@ -144,6 +146,14 @@ switch (command) {
   case "status":
     await status();
     break;
+  case "corrections": {
+    const { detectPatterns, formatReport } = await import("../lib/correction-detector");
+    const vaultDir = args[0] ?? `${process.env.HOME ?? ""}/.claude/projects/-home-${(process.env.USER ?? "user").replace(/\//g, "-")}/memory`;
+    const days = parseInt(args[1] ?? "30", 10);
+    const report = detectPatterns(vaultDir, days);
+    console.log(formatReport(report));
+    break;
+  }
   case "version":
   case "--version":
   case "-v":
