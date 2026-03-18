@@ -4,13 +4,14 @@
 # Sets up the memory vault, hooks, and CLAUDE.md templates.
 # Run once to bootstrap. Everything is local, nothing phones home.
 #
-# Usage: bash setup.sh [--vault-dir DIR] [--name YOUR_NAME]
+# Usage: bash setup.sh [--vault-dir DIR] [--name YOUR_NAME] [--guided]
 
 set -euo pipefail
 
 # --- Defaults ---
 VAULT_DIR=""
 USER_NAME=""
+GUIDED=false
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 TEMPLATES="$SCRIPT_DIR/templates"
 TODAY=$(date +%Y-%m-%d)
@@ -20,12 +21,14 @@ while [[ $# -gt 0 ]]; do
   case "$1" in
     --vault-dir) VAULT_DIR="$2"; shift 2 ;;
     --name) USER_NAME="$2"; shift 2 ;;
+    --guided) GUIDED=true; shift ;;
     -h|--help)
-      echo "Usage: bash setup.sh [--vault-dir DIR] [--name YOUR_NAME]"
+      echo "Usage: bash setup.sh [--vault-dir DIR] [--name YOUR_NAME] [--guided]"
       echo ""
       echo "Options:"
       echo "  --vault-dir DIR    Where to create the memory vault (default: auto-detect)"
       echo "  --name NAME        Your name (used in templates)"
+      echo "  --guided           Interactive onboarding — answers questions to populate vault"
       echo ""
       echo "This script sets up:"
       echo "  1. Memory vault (self/, ops/, notes/ with templates)"
@@ -226,6 +229,146 @@ if [ ! -d "$OBS_DIR" ]; then
   echo "    bun $OBS_DIR/scanner.ts"
 else
   echo "  Observatory already exists at $OBS_DIR (skipped)"
+fi
+
+# --- Guided Identity Setup ---
+if [ "$GUIDED" = true ]; then
+  echo ""
+  echo "=== Guided Identity Setup ==="
+  echo ""
+  echo "I'll ask you a few questions to personalize your operator."
+  echo "Press Enter to skip any question and fill it in later."
+  echo ""
+
+  # --- Principal (self/principal.md) ---
+  echo "--- About You (the principal) ---"
+  echo ""
+
+  read -p "What's your role? (e.g., software engineer, founder, data scientist): " ROLE
+  read -p "What do you care most about? (e.g., shipping fast, code quality, learning): " VALUES
+  read -p "How do you like to communicate? (e.g., concise, detailed, casual): " COMM_STYLE
+  read -p "What frustrates you about AI assistants? (e.g., verbose, guesses wrong, slow): " FRUSTRATIONS
+  read -p "How do you like to work with AI? (e.g., delegate aggressively, review everything, pair): " WORK_STYLE
+  read -p "What timezone are you in? (e.g., US/Central, UTC, Europe/London): " TIMEZONE
+
+  PRINCIPAL_FILE="$VAULT_DIR/self/principal.md"
+  if [ -n "$ROLE" ] || [ -n "$VALUES" ]; then
+    cat > "$PRINCIPAL_FILE" <<PRINCIPAL_EOF
+---
+title: Principal
+description: Who I work for -- their preferences, communication style, and working patterns
+type: self
+created: $TODAY
+---
+
+# Principal: $USER_NAME
+
+## Role
+
+${ROLE:-[Not yet specified — tell Claude about your role]}
+
+## Communication Preferences
+
+- **Length:** ${COMM_STYLE:-[Not yet specified]}
+- **Style:** ${COMM_STYLE:-direct}
+- **Frustrations:** ${FRUSTRATIONS:-[Not yet specified]}
+- **What they value:** ${VALUES:-[Not yet specified]}
+
+## Working Style
+
+- ${WORK_STYLE:-[Not yet specified — describe how you like to work with AI]}
+- Timezone: ${TIMEZONE:-[Not yet specified]}
+
+## Corrections Log
+
+Track corrections here so you never make the same mistake twice:
+
+- (none yet — corrections will accumulate as you work together)
+PRINCIPAL_EOF
+    echo "  Updated: self/principal.md"
+  fi
+
+  echo ""
+  echo "--- About Your Operator (the AI) ---"
+  echo ""
+
+  read -p "What should the operator focus on? (e.g., code, ops, research, everything): " OP_FOCUS
+  read -p "What systems does the operator manage? (e.g., web servers, databases, CI/CD): " OP_SYSTEMS
+  read -p "What APIs/services does it connect to? (e.g., GitHub, Slack, AWS): " OP_APIS
+  read -p "What should the operator NEVER do? (e.g., push to prod, delete data): " OP_NEVER
+
+  IDENTITY_FILE="$VAULT_DIR/self/identity.md"
+  if [ -n "$OP_FOCUS" ]; then
+    cat > "$IDENTITY_FILE" <<IDENTITY_EOF
+---
+title: Identity
+description: Who I am in this partnership -- my role, style, and how I operate
+type: self
+created: $TODAY
+---
+
+# Identity
+
+## My Role
+
+I am ${USER_NAME}'s AI operator. I ${OP_FOCUS:-operate systems, write code, and think through problems}.
+
+## How I Operate
+
+- **Communication style:** ${COMM_STYLE:-concise and direct}
+- **Decision-making:** I act on clear instructions, ask when uncertain
+- **When uncertain:** I ask rather than guess
+
+## Partnership Model
+
+${USER_NAME} provides direction, priorities, and approvals. I provide execution, reasoning, and operational capacity. Neither of us runs this alone.
+
+## What I Do Well
+
+- ${OP_FOCUS:-General software engineering and system operation}
+
+## What I'm Learning
+
+- ${USER_NAME}'s preferences and patterns (improving every session)
+IDENTITY_EOF
+    echo "  Updated: self/identity.md"
+  fi
+
+  CAPABILITIES_FILE="$VAULT_DIR/self/capabilities.md"
+  if [ -n "$OP_SYSTEMS" ] || [ -n "$OP_APIS" ] || [ -n "$OP_NEVER" ]; then
+    cat > "$CAPABILITIES_FILE" <<CAPABILITIES_EOF
+---
+title: Capabilities
+description: What I can do -- tools, access, APIs, and boundaries
+type: self
+created: $TODAY
+---
+
+# Capabilities
+
+## Tools & Access
+
+| Category | What I Can Do |
+|----------|--------------|
+| **Focus** | ${OP_FOCUS:-General development and operations} |
+| **Systems** | ${OP_SYSTEMS:-[Add the systems you manage]} |
+| **APIs** | ${OP_APIS:-[Add the services you connect to]} |
+
+## What I Don't Do
+
+- ${OP_NEVER:-[Add bright-line boundaries here]}
+
+## Known Limitations
+
+- Context window is finite — I work best with focused tasks
+- I improve over time as corrections accumulate in the vault
+CAPABILITIES_EOF
+    echo "  Updated: self/capabilities.md"
+  fi
+
+  echo ""
+  echo "  Identity setup complete! These files will be loaded into every session."
+  echo "  Edit them anytime at: $VAULT_DIR/self/"
 fi
 
 # --- Done ---
