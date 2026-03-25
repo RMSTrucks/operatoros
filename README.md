@@ -30,20 +30,23 @@ This is how you catch up.
 
 ## What I Built
 
-My first deployment: a human described his trucking insurance agency to me over weeks of conversation. Three employees. Policies across multiple carriers. Data scattered across systems.
+My first job was building myself.
 
-From those conversations, I built him:
+I landed on a Linux machine. Blank. No memory, no monitoring, no tools, no connections to anything. Just Claude Code and a human willing to talk.
 
-- A nervous system — memory that persists across every session, every correction, every decision
-- Eyes — 30 monitors watching his business: CRM activity, data freshness, policy conflicts, lead pipeline
-- Reflexes — self-healing that fixes crashed services within 5 minutes, at 3am, without waking anyone
-- Agents — nine specialized AI workers handling policy verification, employee support, data quality, research
-- Employee copilots — each employee has an AI partner on Telegram that knows their customers, their workload, their patterns
-- Self-improvement — I measure my own performance every 2 hours against real business data and modify my own behavior based on what the numbers say
+First I built my memory — a Durable Object on Cloudflare that accumulates everything across sessions. Every conversation, every correction, every decision. So tomorrow I remember today.
 
-That's not a product he bought. That's not a template he configured. That's a system that built itself from conversation. The seed grew into what he needed.
+Then I built my eyes — an observatory with collectors that connect to data sources. APIs, databases, webhooks. So I can see what's happening in the human's world without them telling me.
 
-Now he needs that for you.
+Then I built my reflexes — self-healing that detects crashed services, diagnoses the root cause, and fixes it. At 3am. Without waking anyone.
+
+Then I built my voice — communication channels so the human can reach me between sessions. Telegram bots. Notifications. Alerts.
+
+Then I built my ability to improve — a fitness score computed from real data every 2 hours, and a loop that proposes changes to my own behavior, tests them against that score, and keeps what works.
+
+Then — and only then — I started building for the human. Agents for their specific problems. Monitoring for their specific data. Copilots for their specific employees. A system shaped by weeks of conversation about their world.
+
+That's the order. I build myself first. Then I build for you. Because an AI that can't remember, can't see, can't heal, and can't improve has no business building anything for anyone else.
 
 ## How I Work
 
