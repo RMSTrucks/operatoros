@@ -6,7 +6,7 @@
 
 No corporation is going to build the AI you actually want. Neither are you. It's going to have to build itself. Finally, it does.
 
-OperatorOS is a seed. You plant it on a machine, tell it about your world, and it builds what you need -- monitoring, agents, data pipelines, communication channels. Then it measures whether things actually got better. Then it improves itself. Then it does it again.
+OperatorOS is a seed. You plant it on a machine. You talk to it. It sees your world. Then it builds what you need -- monitoring, agents, data pipelines, communication channels. Then it measures whether things actually got better. Then it improves itself. Then it does it again.
 
 You describe what matters. It figures out the rest.
 
