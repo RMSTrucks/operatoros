@@ -4,26 +4,70 @@
 
 ---
 
-Every AI assistant you've ever used forgets you. Every session is day one. You explain the same things, correct the same mistakes, rebuild the same context. On day 180, the AI knows exactly as much about you as it did on day one.
+No corporation is going to build the AI you actually want. Neither are you. It's going to build itself.
 
-OperatorOS fixes this. It's a kernel — the smallest possible thing that can grow into a personal AI through conversation. You talk to it. It listens. It remembers. It gets better.
+OperatorOS is a seed. You plant it on a machine, tell it about your world, and it builds what you need -- monitoring, agents, data pipelines, communication channels. Then it measures whether things actually got better. Then it improves itself. Then it does it again.
+
+You describe what matters. It figures out the rest.
 
 ## What It Does
 
-After installing OperatorOS, your AI:
+The operator arrives on a machine and:
 
-- **Remembers who you are** — your name, your role, your preferences, your projects
-- **Learns from mistakes** — failures are automatically captured so they're never repeated
-- **Picks up where you left off** — every session continues from the last one, not from zero
-- **Gets better over time** — corrections compound. After a week, it knows you. After a month, it's a genuine partner.
+1. **Listens** -- learns what you need through conversation
+2. **Builds its own infrastructure** -- monitoring, memory, tools, communication
+3. **Creates agents** -- specialized workers for your specific problems
+4. **Measures outcomes** -- a fitness score from your real data
+5. **Improves itself** -- modifies its own behavior, keeps what works, reverts what doesn't
 
-You don't configure any of this. You just talk. The system handles the rest.
+After a week, it knows your business. After a month, it's a genuine partner. You never wrote a line of code. You just talked.
 
-## Requirements
+## How It Works
 
-- **[Bun](https://bun.sh)** >= 1.0.0 (runtime for CLI and hooks)
-- **[Claude Code](https://claude.ai/claude-code)** (the AI that OperatorOS makes persistent)
-- A terminal on macOS or Linux
+The operator is Claude Code with three additions:
+
+- **Persistent memory** via Cloudflare Durable Objects -- continuity across sessions
+- **Lifecycle hooks** -- session-start injects knowledge, session-stop captures learnings
+- **Self-improvement loop** -- three layers that optimize everything from individual LLM calls to the operator's own behavior
+
+### The Three Layers
+
+```
+Layer 1 (AX/DSPy)     -- Optimizes individual LLM calls
+Layer 2 (Hyperagent)   -- Optimizes operator behavior across sessions
+Layer 3 (Self-ref)     -- Can modify how it improves
+    grounded by
+Fitness Score          -- External, from real data, can't be gamed
+```
+
+### Entity Durable Objects
+
+Every noun in your world becomes a Durable Object. An employee, a customer, a project, a policy. Each one has its own timeline, state, relationships, and can wake itself up on a schedule.
+
+You don't query a database. You open the entity and everything is already there. Organized around meaning, not schema.
+
+[Full pattern documentation](docs/entity-do-pattern.md)
+
+## The Architecture
+
+The operator is a von Neumann probe. It doesn't carry solutions -- it carries the ability to build solutions.
+
+```
+Human
+  defines what matters
+    |
+Operator (the seed)
+  translates that into fitness functions
+  builds agents, monitors, improves
+    |
+Domain agents (hyperagents)
+  optimize behavior against fitness
+  discover HOW to achieve what matters
+```
+
+Each layer can modify itself. Each is grounded by the layer above. The whole thing is grounded by reality -- real business data, real outcomes, real human feedback.
+
+[Full architecture documentation](docs/architecture.md)
 
 ## Quick Start
 
@@ -33,102 +77,61 @@ cd operatoros
 bash setup.sh
 ```
 
-For interactive setup that walks you through identity configuration:
-
+For interactive setup:
 ```bash
 bash setup.sh --guided
 ```
 
-Then open Claude Code in your project directory and start talking. The AI will recognize it's a fresh install and begin learning who you are from the conversation itself.
+## Requirements
 
-## What Happens After Install
+- [Bun](https://bun.sh) >= 1.0.0
+- [Claude Code](https://claude.ai/claude-code)
+- A Cloudflare account (free tier works for DOs)
+- A terminal on macOS or Linux
 
-1. **setup.sh** creates a memory vault (`.claude/` directory with markdown files), installs lifecycle hooks into Claude Code's settings, and sets up CLAUDE.md identity templates.
-
-2. **First session** — the session-start hook fires, loads vault context, and the AI introduces itself. It asks about you: your name, your role, what you're working on. Your answers become the seed of its memory.
-
-3. **Subsequent sessions** — each session starts by loading everything the AI learned previously. Session handoffs, captured lessons, your identity, your project context. The AI picks up where it left off.
-
-4. **Over time** — mistakes get captured automatically. Patterns emerge. The AI stops making the same errors and starts anticipating your needs. Knowledge compounds.
-
-## How It Works
-
-OperatorOS creates a persistent memory layer for your AI. Three things make this possible:
-
-1. **The Vault** — A directory of markdown files where your AI stores what it learns about you. Your identity, your preferences, your projects, lessons from past mistakes. Just files — readable, portable, yours.
-
-2. **The Hooks** — Lifecycle events that automatically capture knowledge and inject context. Session starts: the AI loads everything it knows about you. Something fails: the lesson is recorded. Session ends: a handoff is written for next time.
-
-3. **The Identity** — A layered system that tells the AI who it is, who you are, and how to work with you. Not a persona — a functional understanding that makes the AI effective for *you specifically*.
-
-The technical details are invisible. You just notice your AI getting smarter about your work.
-
-## CLI Commands
+## What's Included
 
 ```
-operatoros init [--guided]   Set up vault, hooks, and CLAUDE.md templates
-operatoros observatory       Start the observatory server (metric collection)
-operatoros scan              Run a one-shot observatory scan
-operatoros report            Generate a morning report
-operatoros status            Quick system health check
-operatoros corrections       Detect recurring mistake patterns
-operatoros version           Show version
+templates/
+  claude-md/           -- CLAUDE.md templates (global, project, operator identity)
+  vault/               -- Memory vault structure
+  hooks/               -- Session lifecycle hooks
+  hyperagent/          -- Self-improvement templates (modifications, meta-strategy, eval-criteria)
+  observatory/         -- Monitoring framework with pluggable collectors
+  notifications/       -- Alert routing (Telegram, Slack, desktop)
+docs/
+  architecture.md      -- Three-layer self-improvement, entity DOs, fitness scores
+  entity-do-pattern.md -- Durable Objects as entities, not storage
+  fitness-score-pattern.md -- The ground truth pattern
 ```
+
+## Proven In Production
+
+The first OperatorOS deployment runs a trucking insurance agency with three human employees and nine AI agents. It:
+
+- Verifies 111 policies against carrier data nightly
+- Runs employee copilots on Telegram
+- Monitors 30 business metrics via observatory
+- Self-heals crashed services within 5 minutes
+- Computes a fitness score every 2 hours
+- Proposes and evaluates self-modifications autonomously
+
+The operator built all of this from conversation. No templates. No starter kits. Just a human describing what they need and the operator figuring out how to build it.
 
 ## The Vision
 
-OperatorOS is a kernel. A seed. The smallest starting point that can grow into something deeply personal through nothing more than talking.
+Every deployment is different because every human is different. An insurance agency needs policy verification and employee copilots. A law firm needs case tracking and deadline management. A restaurant needs inventory and scheduling.
 
-A senior engineer uses it to build a coding partner that knows their codebase, their conventions, and their debugging style. A business owner uses it to build an operator that knows their customers, their workflows, and their priorities. A student uses it to build a learning companion that remembers what they've studied and where they struggle.
+The operator doesn't know any of that in advance. It lands, listens, and builds what's needed. Then it watches whether the outcomes improve and gets better at its job.
 
-**The right unit of AI persistence is a directory of files that you own.** Not a cloud service. Not a fine-tuned model. Not a vector database. Files on your machine that can't be taken away from you. Open source isn't our business model. It's our trust model. "Yours" means yours.
+First deployment: invent everything. Second deployment: bring the patterns, invent the domain-specific parts. Third deployment: faster. The operator gets better at being an operator with every deployment.
 
-## Philosophy
+## References
 
-1. **Talk, don't configure** — The AI should learn about you from conversation, not config files
-2. **Local-first** — Your data stays on your machine. Nothing phones home
-3. **Compound over time** — Every session should leave something behind
-4. **Error correction over perfection** — Expect mistakes. Make them cheap to find and fix
-5. **The human is the principal** — AI operates, human directs
-
-## For Contributors
-
-Under the hood, OperatorOS is markdown templates, shell hooks, and a TypeScript CLI for Claude Code:
-
-```
-operatoros/
-  bin/operatoros.ts                       # CLI entry point
-  lib/                                    # Scorecard, picker, runner, corrections
-  setup.sh                               # Interactive setup
-  templates/
-    vault/                               # Memory vault templates
-      MEMORY.md                          # Index template
-      self/                              # Identity (who the AI is, who you are)
-      ops/                               # Live state (handoffs, threads, lessons)
-      notes/mocs/                        # Knowledge organization
-    hooks/                               # Lifecycle hooks
-      session-start.sh                   # Context injection
-      session-end.sh                     # Auto-handoff
-      capture-lessons.sh                 # Failure capture
-      detect-iteration.sh               # Stuck detection
-      precompact-save.sh                # Save context before compression
-      sync-vault-state.sh              # Sync state from external sources
-      settings-snippet.json             # Hook configuration
-    claude-md/                           # CLAUDE.md identity templates
-      global-claude-md.md               # Universal principles
-      project-claude-md.md              # Project context
-      layering-guide.md                 # How the layers work
-    observatory/                         # Metric collection framework
-    notifications/                       # Multi-channel alerting
-    reports/                             # Morning report generator
-  COMPONENTS.md                          # Component interface contracts
-```
-
-See `COMPONENTS.md` for the interface contracts if you want to build collectors, alert rules, notification channels, or vault templates.
-
-## Origin
-
-Built by extracting patterns from a production AI operator system running a real business — 9 companies, 33 agents, 200+ issues tracked. The patterns were discovered by doing, not designed by committee.
+- [HyperAgents paper](https://arxiv.org/abs/2603.19461) (Zhang, Clune, Devlin et al., Meta/FAIR, 2026) -- self-referential agents that improve their own improvement process
+- [AX](https://github.com/ax-llm/ax) -- TypeScript DSPy framework for LLM optimization
+- [Cloudflare Durable Objects](https://developers.cloudflare.com/durable-objects/) -- the persistence layer
+- [Claude Code](https://claude.ai/claude-code) -- the intelligence
 
 ## License
 
