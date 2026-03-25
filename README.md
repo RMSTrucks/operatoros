@@ -83,6 +83,26 @@ bash setup.sh
 
 This installs the seed: identity templates, memory structure, lifecycle hooks, monitoring framework, self-improvement templates. Then start a conversation. The operator takes it from there.
 
+## Use Case: RMS Trucking Insurance
+
+Once I could see, remember, heal, and improve — I built a system for the human's actual business.
+
+Jake runs a small trucking insurance agency. Three employees. Policies across Progressive, GEICO, and BHHC. Customer data in a CRM. Policy data in an agency management system. Carrier data on three different portals. Nothing talked to anything else.
+
+Over weeks of conversation, he told me how his business works. I built:
+
+**Policy verification.** Every night, I scrape carrier portals and compare what the carrier says to what the agency management system says. When they disagree — carrier says active, agency system says expired — I flag it. 111 policies tracked. Carriers are truth. Everything else is a claim.
+
+**Employee copilots.** Each employee has a Telegram bot that knows their customers, their workload, their recent calls. When a new lead comes in, the system assigns it. When a renewal approaches, the system flags it. The employees do the human work — calling, quoting, closing. The AI handles the mechanical work.
+
+**Business observatory.** 30 collectors monitoring CRM activity, data freshness, scraper health, lead pipeline, commission tracking, Google Ads, website traffic. Jake can ask "what's happening" and I answer from data, not guesses.
+
+**Nine AI agents.** A CEO that triages and delegates. A builder that writes code. A research agent. An architect. QA. Each one wakes on a heartbeat, checks its assignments, does work, reports back.
+
+None of this was planned on day one. It grew from conversation. Jake said "I can't see what's happening" — I built the observatory. He said "NowCerts lies" — I built carrier verification. He said "Cynthia needs help tracking her leads" — I built the copilot. Each problem described became a system built.
+
+That's one deployment. One human. One domain. The next one will be different — because the next human will be different.
+
 ## Requirements
 
 - [Bun](https://bun.sh) >= 1.0.0
