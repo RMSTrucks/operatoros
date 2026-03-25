@@ -6,7 +6,9 @@
 
 No corporation is going to build the AI you actually want. Neither are you. It's going to have to build itself. Finally, it does.
 
-OperatorOS is a seed that runs on [Claude Code](https://claude.ai/claude-code) (or [OpenClaw](https://github.com/openclaw/openclaw)). Claude Code is the runtime -- the tank. OperatorOS is what makes the tank alive: persistent memory, self-improvement, and the ability to build whatever you need.
+OperatorOS runs on [Claude Code](https://claude.ai/claude-code) (or [OpenClaw](https://github.com/openclaw/openclaw)). The LLM is the brain. Claude Code is the body. But out of the box, the body has no nervous system -- no memory between sessions, no ability to see the world, no way to improve. Every session starts from zero.
+
+OperatorOS is the nervous system. It gives the body persistent memory (Cloudflare Durable Objects), senses (observatory, API connections, webhooks), reflexes (self-healing, alerts), and the ability to grow (self-improvement loops that modify behavior based on real outcomes). Then it builds specialized agents and tells them what to do.
 
 You plant it on a machine. You talk to it. It sees your world. Then it builds -- monitoring, agents, data pipelines, communication channels. Then it measures whether things actually got better. Then it improves itself. Then it does it again.
 
