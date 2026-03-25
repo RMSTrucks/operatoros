@@ -1,0 +1,8 @@
+[Unit]
+Description=OperatorOS Fitness Score — compute system health
+
+[Service]
+Type=oneshot
+ExecStart=%h/.bun/bin/bun %h/operatoros/lib/operator/fitness-score.ts
+WorkingDirectory=%h/operatoros
+Environment=HOME=%h

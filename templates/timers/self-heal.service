@@ -1,0 +1,8 @@
+[Unit]
+Description=OperatorOS Self-Heal — detect and fix service failures
+
+[Service]
+Type=oneshot
+ExecStart=%h/.bun/bin/bun %h/operatoros/lib/operator/self-heal.ts
+WorkingDirectory=%h/operatoros
+Environment=HOME=%h

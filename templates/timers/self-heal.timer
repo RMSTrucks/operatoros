@@ -1,0 +1,9 @@
+[Unit]
+Description=Run self-heal every 5 minutes
+
+[Timer]
+OnBootSec=30
+OnUnitActiveSec=5min
+
+[Install]
+WantedBy=timers.target

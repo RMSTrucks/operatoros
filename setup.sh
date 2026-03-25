@@ -164,9 +164,31 @@ done
 
 echo "  Hyperagent installed at: $HYPER_DIR"
 
+# --- Install timers ---
+echo ""
+echo "[6/9] Installing timers..."
+
+TIMER_DIR="$HOME/.config/systemd/user"
+mkdir -p "$TIMER_DIR"
+
+for file in self-heal.service self-heal.timer fitness-score.service fitness-score.timer; do
+  target="$TIMER_DIR/$file"
+  if [ ! -f "$target" ]; then
+    cp "$TEMPLATES/timers/$file" "$target"
+    echo "  Installed: $file"
+  else
+    echo "  Exists:    $file (skipped)"
+  fi
+done
+
+# Enable timers
+systemctl --user daemon-reload 2>/dev/null || true
+systemctl --user enable --now self-heal.timer 2>/dev/null && echo "  Enabled: self-heal.timer (every 5min)" || echo "  Note: systemd not available — run self-heal manually"
+systemctl --user enable --now fitness-score.timer 2>/dev/null && echo "  Enabled: fitness-score.timer (every 2h)" || echo "  Note: systemd not available — run fitness-score manually"
+
 # --- Configure hooks in settings.json ---
 echo ""
-echo "[6/8] Configuring Claude Code settings..."
+echo "[7/9] Configuring Claude Code settings..."
 
 SETTINGS="$HOME/.claude/settings.json"
 if [ -f "$SETTINGS" ]; then
@@ -193,7 +215,7 @@ fi
 
 # --- Notifications ---
 echo ""
-echo "[7/8] Setting up Notifications..."
+echo "[8/9] Setting up Notifications..."
 
 NOTIF_DIR="$HOME/.operatoros/notifications"
 if [ ! -d "$NOTIF_DIR" ]; then
@@ -226,7 +248,7 @@ fi
 
 # --- Observatory ---
 echo ""
-echo "[8/8] Setting up Observatory..."
+echo "[9/9] Setting up Observatory..."
 
 OBS_DIR="$HOME/.operatoros/observatory"
 if [ ! -d "$OBS_DIR" ]; then
