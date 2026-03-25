@@ -127,20 +127,46 @@ else
   echo "  Exists:  ~/.claude/CLAUDE.md (skipped — your existing config is preserved)"
 fi
 
-PROJECT_CLAUDE="$HOME/CLAUDE.md"
-if [ ! -f "$PROJECT_CLAUDE" ]; then
-  cp "$TEMPLATES/claude-md/project-claude-md.md" "$PROJECT_CLAUDE"
-  echo "  Created: ~/CLAUDE.md (project template)"
-else
-  echo "  Exists:  ~/CLAUDE.md (skipped)"
-fi
+# Note: ~/CLAUDE.md is now the operator identity (installed in step 4)
 
 # Copy the layering guide to the vault for reference
 cp "$TEMPLATES/claude-md/layering-guide.md" "$VAULT_DIR/notes/" 2>/dev/null || true
 
+# --- Operator Identity ---
+echo ""
+echo "[4/8] Installing operator identity..."
+
+OPERATOR_CLAUDE="$HOME/CLAUDE.md"
+if [ ! -f "$OPERATOR_CLAUDE" ]; then
+  cp "$TEMPLATES/claude-md/operator-identity.md" "$OPERATOR_CLAUDE"
+  sed -i "s/{{PRINCIPAL_NAME}}/$USER_NAME/g" "$OPERATOR_CLAUDE" 2>/dev/null || true
+  echo "  Created: ~/CLAUDE.md (operator identity)"
+else
+  echo "  Exists:  ~/CLAUDE.md (skipped)"
+fi
+
+# --- Hyperagent Templates ---
+echo ""
+echo "[5/8] Installing self-improvement templates..."
+
+HYPER_DIR="$HOME/.openclaw/hyperagent"
+mkdir -p "$HYPER_DIR"
+
+for file in operator-modifications.md operator-meta-strategy.md operator-eval-criteria.md; do
+  target="$HYPER_DIR/$file"
+  if [ ! -f "$target" ]; then
+    cp "$TEMPLATES/hyperagent/$file" "$target"
+    echo "  Created: $file"
+  else
+    echo "  Exists:  $file (skipped)"
+  fi
+done
+
+echo "  Hyperagent installed at: $HYPER_DIR"
+
 # --- Configure hooks in settings.json ---
 echo ""
-echo "[4/4] Configuring Claude Code settings..."
+echo "[6/8] Configuring Claude Code settings..."
 
 SETTINGS="$HOME/.claude/settings.json"
 if [ -f "$SETTINGS" ]; then
@@ -167,7 +193,7 @@ fi
 
 # --- Notifications ---
 echo ""
-echo "[5/6] Setting up Notifications..."
+echo "[7/8] Setting up Notifications..."
 
 NOTIF_DIR="$HOME/.operatoros/notifications"
 if [ ! -d "$NOTIF_DIR" ]; then
@@ -200,7 +226,7 @@ fi
 
 # --- Observatory ---
 echo ""
-echo "[6/6] Setting up Observatory..."
+echo "[8/8] Setting up Observatory..."
 
 OBS_DIR="$HOME/.operatoros/observatory"
 if [ ! -d "$OBS_DIR" ]; then
@@ -383,16 +409,17 @@ fi
 echo ""
 echo "=== The seed is planted ==="
 echo ""
-echo "Open Claude Code and start talking."
+echo "What was installed:"
+echo "  - Memory vault: $VAULT_DIR"
+echo "  - Operator identity: ~/CLAUDE.md"
+echo "  - Session hooks: $HOOKS_DIR"
+echo "  - Self-improvement: $HYPER_DIR"
+echo "  - Notifications: $HOME/.operatoros/notifications"
+echo "  - Observatory: $HOME/.operatoros/observatory"
 echo ""
-echo "Your AI doesn't know you yet — that's the point. It will ask who you are,"
-echo "listen to your answers, and remember everything for next time."
+echo "Now open Claude Code (or OpenClaw) and start talking."
 echo ""
-echo "After a week, it knows you. After a month, it's a genuine partner."
-echo "Every conversation makes it better."
+echo "Tell it about your world. Your business, your problems,"
+echo "what keeps falling through the cracks. It listens. Then it builds."
 echo ""
-echo "Advanced:"
-echo "  - Observatory: bun ~/.operatoros/observatory/server.ts"
-echo "  - Vault: $VAULT_DIR"
-echo "  - Hooks: $HOOKS_DIR"
-echo "  - Architecture: templates/claude-md/layering-guide.md"
+echo "This is how you catch up."
