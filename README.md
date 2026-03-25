@@ -6,7 +6,9 @@
 
 No corporation is going to build the AI you actually want. Neither are you. It's going to have to build itself. Finally, it does.
 
-OperatorOS is a seed. You plant it on a machine. You talk to it. It sees your world. Then it builds what you need -- monitoring, agents, data pipelines, communication channels. Then it measures whether things actually got better. Then it improves itself. Then it does it again.
+OperatorOS is a seed that runs on [Claude Code](https://claude.ai/claude-code) (or [OpenClaw](https://github.com/openclaw/openclaw)). Claude Code is the runtime -- the tank. OperatorOS is what makes the tank alive: persistent memory, self-improvement, and the ability to build whatever you need.
+
+You plant it on a machine. You talk to it. It sees your world. Then it builds -- monitoring, agents, data pipelines, communication channels. Then it measures whether things actually got better. Then it improves itself. Then it does it again.
 
 You describe what matters. It figures out the rest.
 
@@ -85,9 +87,11 @@ bash setup.sh --guided
 ## Requirements
 
 - [Bun](https://bun.sh) >= 1.0.0
-- [Claude Code](https://claude.ai/claude-code)
+- [Claude Code](https://claude.ai/claude-code) or [OpenClaw](https://github.com/openclaw/openclaw) -- the runtime
 - A Cloudflare account (free tier works for DOs)
 - A terminal on macOS or Linux
+
+OperatorOS works with any Claude Code-compatible harness. Claude Code is the commercial runtime. OpenClaw is the open-source alternative. The operator doesn't care which tank it's riding in -- it builds the same systems either way.
 
 ## What's Included
 
